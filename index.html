@@ -468,7 +468,8 @@
 
       <div class="subhead">Curva de amortización</div>
       <div id="curveWrap">
-        <canvas id="balanceChart"></canvas>
+        <div id="chartPlaceholder" style="height:200px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem;letter-spacing:.02em">Ejecutá el cálculo para ver la curva</div>
+        <canvas id="balanceChart" style="display:none"></canvas>
       </div>
     </aside>
 
@@ -924,6 +925,11 @@
   }
   function updateChart(baseRows,aporteRows,startDate,principal,hasAportes){
     if(typeof Chart==='undefined') return;
+    /* Show canvas, hide placeholder */
+    var ph=document.getElementById('chartPlaceholder');
+    var cv=document.getElementById('balanceChart');
+    if(ph) ph.style.display='none';
+    if(cv) cv.style.display='block';
     var base=curveDataYearly(baseRows,startDate,principal);
     var ap=curveDataYearly(aporteRows,startDate,principal);
     var allYears=base.years.slice();
@@ -1023,10 +1029,12 @@
     ensureDateInputs();
     ratesBox=document.getElementById('rates');
     extrasList=document.getElementById('extrasList');
-    rateRows=[];
+    /* Start with one empty rate row so user doesn't need to click "+ Periodo" first */
+    var todayStr=toISO(new Date());
+    rateRows=[{start:todayStr, end:null, annual_rate:null}];
     renderRates();
     renderExtras();
-    initChart();
+    /* Chart is initialized lazily on first updateChart call */
 
     /* Page load GSAP entrance */
     if(typeof gsap!=='undefined'){
