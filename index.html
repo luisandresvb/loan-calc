@@ -5,87 +5,350 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Calculadora Hipotecaria CRC y aportes</title>
+  <title>Calculadora Hipotecaria — Aportes extraordinarios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <style>
-    :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--accent:#22c55e;--accent-2:#06b6d4;--danger:#ef4444;--warning:#f59e0b;--border:#1f2937;--gray:#9ca3af}
-    *{box-sizing:border-box; -webkit-tap-highlight-color: transparent}
-    html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif; -webkit-text-size-adjust: 100%; -webkit-font-smoothing: antialiased}
-    h1,h2{margin:0 0 .5rem} a{color:var(--accent-2)}
-    .wrap{max-width:1200px;margin:0 auto;padding:24px}
-    .wrap.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
-    .span-7{grid-column:span 7} .span-5{grid-column:span 5} .span-12{grid-column:span 12}
-    label{display:block;font-size:.9rem;color:var(--muted);margin-bottom:6px}
-    input,select,button{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#0b1220;color:#e5e7eb;outline:none; -webkit-appearance:none;font-size:16px}
-    input[type="date"]{padding:10px}
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-    select{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" fill="%2394a3b8"><path d="M1 1l5 5 5-5"/></svg>'); background-repeat:no-repeat; background-position:right 10px center; padding-right:28px}
-    .grid{display:grid;gap:12px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-    .row4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .btn{cursor:pointer;font-weight:600} .btn-primary{background:var(--accent);border-color:transparent;color:#052e16}
-    .btn-secondary{background:#0b1220} .btn-danger{background:var(--danger);border-color:transparent}
-    .btn-pill{border-radius:999px;padding:10px 16px}
-    .btn-xs{padding:0;width:28px;height:28px;line-height:26px;text-align:center;border-radius:6px}
-    .flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .table-wrap{overflow:auto;max-height:420px;border-radius:10px;border:1px solid var(--border); -webkit-overflow-scrolling: touch}
-    table{width:100%;border-collapse:collapse;min-width:860px}
-    th,td{padding:10px;border-bottom:1px solid var(--border);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-    th:nth-child(2), td:nth-child(2){text-align:center} th:first-child, td:first-child{text-align:center}
-    th{position:sticky;top:0;background:#0b1220}
-    .note{color:var(--muted);font-size:.9rem}
-    .pill{display:inline-block;border:1px solid var(--border);padding:6px 10px;border-radius:999px}
-    .stat{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center} .stat b{font-size:1.05rem}
-    .ok{color:var(--accent)} .warn{color:var(--warning)} .bad{color:var(--danger)} .gray{color:var(--gray)}
-    .hr{height:1px;background:var(--border);margin:10px 0}
-    .help{font-size:.85rem;color:var(--muted)}
-    .tag{display:inline-block;background:#0b1220;border:1px solid var(--border);border-radius:8px;padding:4px 8px;margin-right:6px}
-    .mini-table{overflow:auto;border:1px solid var(--border);border-radius:10px; -webkit-overflow-scrolling: touch; width:100%}
-    .mini-table table{table-layout:fixed; width:100%; min-width:640px}
-    .mini-table th:nth-child(1), .mini-table td:nth-child(1){width:40px;text-align:center}
-    .mini-table th:nth-child(2), .mini-table td:nth-child(2){width:140px;text-align:center}
-    .mini-table th:nth-child(3), .mini-table td:nth-child(3){width:160px}
-    .mini-table th:nth-child(4), .mini-table td:nth-child(4){width:140px;text-align:center}
-    .mini-table th:nth-child(5), .mini-table td:nth-child(5){width:60px;text-align:center}
-    .subhead{font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);margin:6px 0 2px}
-    #curveWrap{border:1px solid var(--border);border-radius:10px;padding:8px;margin-top:6px; position:relative}
-    canvas{display:block;width:100%;height:160px}
-    .legend{display:flex;gap:10px;align-items:center;font-size:.85rem;color:var(--muted)}
-    .leg{display:inline-flex;align-items:center;gap:6px}
-    .boxG{width:14px;height:3px;background:var(--accent);display:inline-block;border-radius:2px}
-    .boxB{width:14px;height:3px;background:var(--gray);display:inline-block;border-radius:2px}
-    .chart-tip{position:absolute;pointer-events:none;background:#0b1220;border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:.85rem;color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.25)}
-    .chart-tip b{display:block}
-    .muted{color:var(--muted)}
-
-    /* ===== Responsive ===== */
-    @media (max-width: 980px){
-      .wrap{padding:16px}
-      .span-7, .span-5, .span-12{grid-column:span 12}
-      .row{grid-template-columns:1fr}
-      .row3{grid-template-columns:1fr 1fr}
-      .row4{grid-template-columns:1fr 1fr}
-      table{min-width:740px}
-      th{position:static} /* Safari iOS: sticky + overflow puede fallar */
-      .btn-xs{width:28px}
+    :root {
+      --bg: #080f1e;
+      --card: rgba(13,21,38,0.82);
+      --card-solid: #0d1526;
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --accent: #22c55e;
+      --accent-2: #06b6d4;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --border: rgba(255,255,255,0.07);
+      --border-solid: #1e2a3a;
+      --gray: #9ca3af;
+      --shadow: 0 4px 24px rgba(0,0,0,.35);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,.5);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-xs: 8px;
+      --input-bg: rgba(255,255,255,0.04);
     }
-    @media (max-width: 640px){
-      .row3{grid-template-columns:1fr}
-      .mini-table table{min-width:440px}
-      table{min-width:680px}
+    *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* Background glow orbs */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(130px);
+      z-index: 0;
+      pointer-events: none;
+      animation: glowFloat 20s ease-in-out infinite alternate;
+    }
+    body::before {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(34,197,94,0.13) 0%, transparent 70%);
+      top: -250px; left: -150px;
+    }
+    body::after {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(6,182,212,0.10) 0%, transparent 70%);
+      bottom: -200px; right: -100px;
+      animation-direction: alternate-reverse;
+      animation-duration: 25s;
+    }
+    @keyframes glowFloat {
+      0%   { transform: translate(0,0) scale(1); }
+      100% { transform: translate(35px,45px) scale(1.09); }
+    }
+
+    /* Layout */
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .wrap.grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0,1fr));
+      gap: 16px;
+    }
+    .span-7  { grid-column: span 7; }
+    .span-5  { grid-column: span 5; }
+    .span-12 { grid-column: span 12; }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .grid { display: grid; gap: 12px; }
+
+    /* Typography */
+    h1 { margin: 0 0 .4rem; font-size: 1.65rem; font-weight: 700; letter-spacing: -.025em; line-height: 1.2; }
+    h2 { margin: 0 0 .75rem; font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; }
+    h3 { margin: 0 0 .5rem; font-size: .92rem; font-weight: 600; }
+    h4 { margin: .8rem 0 .35rem; font-size: .78rem; font-weight: 600; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
+    a  { color: var(--accent-2); }
+
+    .gradient-text {
+      background: linear-gradient(125deg, #e5e7eb 0%, #22c55e 55%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-sub { color: var(--muted); font-size: .875rem; margin: 0; line-height: 1.6; }
+
+    /* Section groups */
+    .section-group { border-top: 1px solid var(--border); padding-top: 16px; margin-top: 4px; }
+    .section-label {
+      font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--gray); margin: 0 0 10px;
+    }
+
+    /* Form elements */
+    .row  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .row4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+    label {
+      display: block; font-size: .8rem; font-weight: 500;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    input, select, button {
+      width: 100%; padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-solid);
+      background: var(--input-bg);
+      color: var(--text); outline: none;
+      -webkit-appearance: none; appearance: none;
+      font-size: 16px; font-family: inherit;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(34,197,94,.12);
+      background: rgba(255,255,255,.06);
+    }
+    input[readonly] { color: var(--muted); cursor: default; }
+    input[type="date"] { padding: 10px 14px; }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    select {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" fill="none"><path d="M1 1l5 5 5-5" stroke="%2394a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px; cursor: pointer;
+    }
+
+    /* Buttons */
+    .btn {
+      cursor: pointer; font-weight: 600; font-family: inherit; font-size: .88rem;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      transition: transform .15s, box-shadow .2s, background .2s;
+      will-change: transform;
+      -webkit-user-select: none; user-select: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      border-color: transparent; color: #052e16;
+      box-shadow: 0 4px 14px rgba(34,197,94,.28);
+    }
+    .btn-primary:hover { box-shadow: 0 6px 22px rgba(34,197,94,.42); transform: translateY(-1px); }
+    .btn-secondary {
+      background: rgba(255,255,255,.05);
+      border-color: var(--border-solid); color: var(--text);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18); }
+    .btn-danger  { background: var(--danger); border-color: transparent; color: #fff; }
+    .btn-pill    { border-radius: 999px; padding: 10px 20px; }
+    .btn-xs      { padding: 0; width: 28px; height: 28px; border-radius: var(--radius-xs); font-size: .8rem; }
+
+    .flex { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    /* Pills & Tags */
+    .pill {
+      display: inline-block;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border-solid);
+      padding: 4px 10px; border-radius: 999px; font-size: .78rem;
+    }
+    .tag {
+      display: inline-block;
+      background: rgba(34,197,94,.08);
+      border: 1px solid rgba(34,197,94,.2);
+      border-radius: var(--radius-xs);
+      padding: 2px 8px; margin-right: 4px;
+      font-size: .8rem; color: var(--accent);
+    }
+
+    /* Text helpers */
+    .note  { color: var(--muted); font-size: .875rem; line-height: 1.55; }
+    .help  { font-size: .8rem; color: var(--muted); }
+    .muted { color: var(--muted); }
+    .ok    { color: var(--accent); }
+    .warn  { color: var(--warning); }
+    .bad   { color: var(--danger); }
+    .gray  { color: var(--gray); }
+
+    /* Summary stats */
+    .subhead {
+      font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--gray); margin: 14px 0 8px;
+    }
+    .subhead:first-child { margin-top: 0; }
+
+    .stat {
+      display: flex; align-items: baseline;
+      justify-content: space-between; gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .stat:last-child { border-bottom: none; }
+    .stat .stat-label { font-size: .82rem; color: var(--muted); }
+    .stat b { font-size: .92rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    /* Savings big highlight */
+    .savings-big {
+      text-align: center; padding: 14px 12px;
+      background: rgba(34,197,94,.06);
+      border: 1px solid rgba(34,197,94,.18);
+      border-radius: var(--radius-sm); margin-bottom: 10px;
+    }
+    .savings-big .savings-amount {
+      font-size: 1.55rem; font-weight: 700;
+      display: block; letter-spacing: -.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .savings-big .savings-caption { font-size: .78rem; color: var(--muted); margin-top: 3px; }
+
+    /* Chart */
+    #curveWrap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px; margin-top: 6px;
+      background: rgba(0,0,0,.2);
+    }
+    #balanceChart { display: block; width: 100% !important; height: 200px !important; }
+
+    /* Divider */
+    .hr { height: 1px; background: var(--border); margin: 14px 0; }
+
+    /* Mini table (extras) */
+    .mini-table {
+      overflow: auto; border: 1px solid var(--border-solid);
+      border-radius: var(--radius-sm);
+      -webkit-overflow-scrolling: touch; width: 100%;
+    }
+    .mini-table table { table-layout: fixed; width: 100%; min-width: 500px; border-collapse: collapse; }
+    .mini-table th, .mini-table td {
+      padding: 8px 10px; border-bottom: 1px solid var(--border);
+      font-size: .83rem; text-align: right;
+    }
+    .mini-table th {
+      background: rgba(255,255,255,.03);
+      font-size: .72rem; font-weight: 600; letter-spacing: .05em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .mini-table th:nth-child(1), .mini-table td:nth-child(1) { width:40px; text-align:center; }
+    .mini-table th:nth-child(2), .mini-table td:nth-child(2) { width:140px; text-align:center; }
+    .mini-table th:nth-child(3), .mini-table td:nth-child(3) { width:160px; }
+    .mini-table th:nth-child(4), .mini-table td:nth-child(4) { width:140px; text-align:center; }
+    .mini-table th:nth-child(5), .mini-table td:nth-child(5) { width:60px; text-align:center; }
+
+    /* Collapsible schedule */
+    .schedule-header {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 12px;
+    }
+    .schedule-header h2 { margin-bottom: 0; }
+    .schedule-toggle { font-size: .82rem; padding: 8px 16px; gap: 6px; }
+    .chevron { width: 15px; height: 15px; flex-shrink: 0; }
+    #scheduleBody { overflow: hidden; height: 0; opacity: 0; }
+    #scheduleBody .table-inner { padding-top: 16px; }
+
+    /* Main schedule table */
+    .table-wrap {
+      overflow: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-solid);
+      -webkit-overflow-scrolling: touch;
+      max-height: 520px;
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 860px; }
+    th, td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap; font-size: .83rem;
+    }
+    th:nth-child(2), td:nth-child(2) { text-align: center; }
+    th:first-child, td:first-child { text-align: center; }
+    th {
+      position: sticky; top: 0;
+      background: rgba(11,18,32,.96);
+      backdrop-filter: blur(8px);
+      font-size: .72rem; font-weight: 600;
+      letter-spacing: .05em; text-transform: uppercase;
+      color: var(--muted); z-index: 10;
+    }
+    tbody tr:nth-child(even) { background: rgba(255,255,255,.015); }
+    tbody tr:hover { background: rgba(255,255,255,.04); transition: background .12s; }
+
+    #msg { font-size: .8rem; color: var(--muted); }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .wrap { padding: 16px; }
+      .span-7, .span-5, .span-12 { grid-column: span 12; }
+      .row  { grid-template-columns: 1fr; }
+      .row3 { grid-template-columns: 1fr 1fr; }
+      .row4 { grid-template-columns: 1fr 1fr; }
+      table { min-width: 740px; }
+      th { position: static; }
+      .btn-xs { width: 28px; }
+    }
+    @media (max-width: 640px) {
+      .wrap { padding: 12px; gap: 12px; }
+      .card { padding: 16px; }
+      h1 { font-size: 1.3rem; }
+      .row3 { grid-template-columns: 1fr; }
+      .row4 { grid-template-columns: 1fr 1fr; }
+      table { min-width: 680px; }
+      .mini-table table { min-width: 440px; }
+      #balanceChart { height: 170px !important; }
+      .savings-big .savings-amount { font-size: 1.25rem; }
+      .schedule-header { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
   <div class="wrap grid">
+
+    <!-- Header -->
     <header class="card span-12">
-      <h1>Calculadora Hipotecaria — Aportes extra.</h1>
-      <div class="note">Interés <b>mensual vencido M/VEN</b> (anual/12). Penalidad de prepago se <b>descuenta del aporte</b> (no reduce saldo). Con aportes, el <b>plazo se reduce</b>; en cambios de tasa, la cuota se recalcula preservando meses ahorrados.</div>
+      <h1 class="gradient-text">Calculadora Hipotecaria</h1>
+      <p class="header-sub">Interés <b>mensual vencido M/VEN</b> (anual ÷ 12). La penalidad de prepago se descuenta del aporte (no reduce saldo). Con aportes el <b>plazo se reduce</b>; en cambios de tasa la cuota se recalcula preservando los meses ahorrados.</p>
     </header>
 
-    <section class="card span-7 grid">
+    <!-- Input panel -->
+    <section class="card span-7 grid" id="inputCard">
       <h2>Parámetros</h2>
       <div class="row">
         <div>
@@ -108,862 +371,765 @@
         </div>
       </div>
 
-      <div class="hr"></div>
-      <h3>Tasas por periodo</h3>
-      <div class="note">Agregue al menos un periodo de tasa (inicio, tasa anual y fin opcional (vacío= hasta final de plazo</div>
-      <div id="rates"></div>
-      <div class="flex">
-        <button id="addRate" class="btn btn-secondary btn-pill">+ Agregar periodo</button>
-      </div>
-
-      <div class="hr"></div>
-      <h3>Penalización sobre aportes extraordinarios</h3>
-      <div class="row">
-        <div>
-          <label>Porcentaje (%)</label>
-          <input id="penaltyPct" type="number" inputmode="decimal" step="0.1" min="0" autocomplete="off">
-        </div>
-        <div>
-          <label>Vigencia (meses desde inicio)</label>
-          <input id="penaltyMonths" type="number" step="1" min="0" inputmode="numeric" autocomplete="off">
+      <div class="section-group">
+        <p class="section-label">Tasas por periodo</p>
+        <div class="note" style="margin-bottom:10px">Al menos un periodo · <span class="help">Fin vacío = hasta final del plazo</span></div>
+        <div id="rates"></div>
+        <div class="flex" style="margin-top:8px">
+          <button id="addRate" class="btn btn-secondary btn-pill">+ Periodo</button>
         </div>
       </div>
 
-      <div class="hr"></div>
-      <h3>Aportes extraordinarios</h3>
-      <div class="note">Podés combinar <span class="tag">puntuales</span> y <span class="tag">mensuales desde fecha</span></div>
-
-      <h4>Puntuales</h4>
-      <div id="extrasList"></div>
-      <div class="row4">
-        <div><label>Fecha</label><input id="exDate" type="date" inputmode="numeric" placeholder="AAAA-MM-DD"></div>
-        <div><label>Monto</label><input id="exAmount" type="number" inputmode="numeric" step="10000" min="0"></div>
-        <div>
-          <label>Aplicar a</label>
-          <select id="exEffect">
-            <option value="plazo" selected>Reducir plazo</option>
-            <option value="cuota">Reducir cuota</option>
-          </select>
-        </div>
-        <div><label>&nbsp;</label><button id="addExtra" class="btn btn-secondary btn-pill">+ Agregar</button></div>
-      </div>
-
-      <h4>Mensuales desde fecha</h4>
-      <div class="row4">
-        <div><label>Activar</label>
-          <select id="recurOn">
-            <option value="no" selected>No</option>
-            <option value="si">Sí</option>
-          </select>
-        </div>
-        <div><label>Desde</label><input id="recurStart" type="date" inputmode="numeric" placeholder="AAAA-MM-DD"></div>
-        <div><label>Monto mensual</label><input id="recurAmount" type="number" inputmode="numeric" step="10000" min="0"></div>
-        <div>
-          <label>Aplicar a</label>
-          <select id="recurEffect">
-            <option value="plazo" selected>Reducir plazo</option>
-            <option value="cuota">Reducir cuota</option>
-          </select>
+      <div class="section-group">
+        <p class="section-label">Penalización por prepago</p>
+        <div class="row">
+          <div>
+            <label>Porcentaje (%)</label>
+            <input id="penaltyPct" type="number" inputmode="decimal" step="0.1" min="0" autocomplete="off">
+          </div>
+          <div>
+            <label>Vigencia (meses desde inicio)</label>
+            <input id="penaltyMonths" type="number" step="1" min="0" inputmode="numeric" autocomplete="off">
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div>
-          <label>Meses a aplicar (opcional)</label>
-          <input id="recurMonths" type="number" step="1" min="0" placeholder="vacío = hasta el fin del préstamo" inputmode="numeric">
+
+      <div class="section-group">
+        <p class="section-label">Aportes extraordinarios</p>
+        <div class="note" style="margin-bottom:8px">Combiná <span class="tag">puntuales</span> y <span class="tag">mensuales desde fecha</span></div>
+
+        <h4>Puntuales</h4>
+        <div id="extrasList"></div>
+        <div class="row4" style="margin-top:8px">
+          <div><label>Fecha</label><input id="exDate" type="date" inputmode="numeric" placeholder="AAAA-MM-DD"></div>
+          <div><label>Monto</label><input id="exAmount" type="number" inputmode="numeric" step="10000" min="0"></div>
+          <div>
+            <label>Aplicar a</label>
+            <select id="exEffect">
+              <option value="plazo" selected>Reducir plazo</option>
+              <option value="cuota">Reducir cuota</option>
+            </select>
+          </div>
+          <div><label>&nbsp;</label><button id="addExtra" class="btn btn-secondary btn-pill">+ Agregar</button></div>
         </div>
-        <div></div>
+
+        <h4>Mensuales desde fecha</h4>
+        <div class="row4">
+          <div>
+            <label>Activar</label>
+            <select id="recurOn">
+              <option value="no" selected>No</option>
+              <option value="si">Sí</option>
+            </select>
+          </div>
+          <div><label>Desde</label><input id="recurStart" type="date" inputmode="numeric" placeholder="AAAA-MM-DD"></div>
+          <div><label>Monto mensual</label><input id="recurAmount" type="number" inputmode="numeric" step="10000" min="0"></div>
+          <div>
+            <label>Aplicar a</label>
+            <select id="recurEffect">
+              <option value="plazo" selected>Reducir plazo</option>
+              <option value="cuota">Reducir cuota</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <div>
+            <label>Meses a aplicar (opcional)</label>
+            <input id="recurMonths" type="number" step="1" min="0" placeholder="vacío = hasta el fin del préstamo" inputmode="numeric">
+          </div>
+          <div></div>
+        </div>
       </div>
 
-      <div class="hr"></div>
-      <div class="flex">
-        <button id="calc" class="btn btn-primary btn-pill">Calcular</button>
-        <button id="exportCsv" class="btn btn-secondary btn-pill">Exportar CSV</button>
-        <span id="msg" class="note"></span>
+      <div class="section-group">
+        <div class="flex">
+          <button id="calc" class="btn btn-primary btn-pill">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Calcular
+          </button>
+          <button id="exportCsv" class="btn btn-secondary btn-pill">↓ CSV</button>
+          <span id="msg" class="note"></span>
+        </div>
       </div>
     </section>
 
-    <aside class="card span-5 grid">
+    <!-- Summary + Chart -->
+    <aside class="card span-5" id="summaryCard">
       <h2>Resumen</h2>
 
-      <div class="hr"></div>
       <div class="subhead">Base (sin aportes)</div>
-      <div id="summaryBase" class="grid"></div>
+      <div id="summaryBase"></div>
 
-      <div class="hr"></div>
       <div class="subhead">Con aportes</div>
-      <div id="summaryAporte" class="grid"></div>
+      <div id="summaryAporte"></div>
 
-      <div class="hr"></div>
       <div class="subhead">Diferencias</div>
-      <div id="summaryDiff" class="grid"></div>
+      <div id="summaryDiff"></div>
 
-      <div class="hr"></div>
       <div class="subhead">Curva de amortización</div>
       <div id="curveWrap">
-        <canvas id="miniChart" width="560" height="160"></canvas>
-        <div class="legend">
-          <span class="leg"><i class="boxB"></i> Base</span>
-          <span class="leg"><i class="boxG"></i> Con aportes</span>
-        </div>
-        <div id="chartTip" class="chart-tip" style="display:none"></div>
+        <canvas id="balanceChart"></canvas>
       </div>
     </aside>
 
-    <section class="card span-12 grid">
-      <h2>Cronograma (con aportes)</h2>
-      <div class="table-wrap">
-        <table id="sched">
-          <colgroup>
-            <col style="width:80px">
-            <col style="width:120px">
-            <col style="width:60px">
-            <col style="width:120px">
-            <col style="width:120px">
-            <col style="width:120px">
-            <col style="width:140px">
-            <col style="width:120px">
-            <col style="width:120px">
-            <col style="width:120px">
-          </colgroup>
-          <thead>
-            <tr>
-              <th>Período</th>
-              <th>Fecha</th>
-              <th>Días</th>
-              <th>Tasa anual periodo</th>
-              <th>Interés</th>
-              <th>Amortización</th>
-              <th>Cuota</th>
-              <th>Penalidad</th>
-              <th>Aportes extra</th>
-              <th>Saldo final</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+    <!-- Collapsible Schedule -->
+    <section class="card span-12" id="scheduleCard">
+      <div class="schedule-header">
+        <h2>Cronograma (con aportes)</h2>
+        <button id="toggleSchedule" class="btn btn-secondary schedule-toggle">
+          <span id="scheduleToggleLabel">Ver tabla</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
       </div>
-      <div class="note">La penalidad se descuenta del aporte: si aportás ₡1 000 000 y la penalidad es 3% (=₡30 000), solo ₡970 000 van a capital.</div>
+      <div id="scheduleBody">
+        <div class="table-inner">
+          <div class="table-wrap">
+            <table id="sched">
+              <colgroup>
+                <col style="width:70px"><col style="width:120px"><col style="width:55px">
+                <col style="width:110px"><col style="width:130px"><col style="width:130px">
+                <col style="width:130px"><col style="width:120px"><col style="width:130px"><col style="width:130px">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Período</th><th>Fecha</th><th>Días</th><th>Tasa %</th>
+                  <th>Interés</th><th>Amortización</th><th>Cuota</th>
+                  <th>Penalidad</th><th>Aportes extra</th><th>Saldo final</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="note" style="margin-top:10px">La penalidad se descuenta del aporte: si aportás ₡1 000 000 y la penalidad es 3% (=₡30 000), solo ₡970 000 van a capital.</p>
+        </div>
+      </div>
     </section>
-  </div>
+
+  </div><!-- /wrap -->
 
 <script>
 (function(){
-  // --------- Utilidad: soporte de fecha en Safari ---------
+
+  /* ===== Safari date input fallback ===== */
   function supportsDateInput(){
-    var i=document.createElement('input');
-    i.setAttribute('type','date');
-    var notADateValue = 'not-a-date';
-    i.setAttribute('value', notADateValue);
-    return (i.value !== notADateValue);
+    var i=document.createElement('input'); i.setAttribute('type','date');
+    var v='not-a-date'; i.setAttribute('value',v); return (i.value!==v);
   }
   function ensureDateInputs(){
-    if (supportsDateInput()) return;
-    var dts = document.querySelectorAll('input[type="date"]');
-    for (var k=0;k<dts.length;k++){
-      var el = dts[k];
-      el.setAttribute('type','text');
+    if(supportsDateInput()) return;
+    var dts=document.querySelectorAll('input[type="date"]');
+    for(var k=0;k<dts.length;k++){
+      var el=dts[k]; el.setAttribute('type','text');
       el.setAttribute('placeholder','AAAA-MM-DD');
       el.setAttribute('pattern','^\\d{4}-\\d{2}-\\d{2}$');
     }
   }
 
-  // ---------- Helpers tamaño canvas ----------
-  function canvasDims(c){
-    var wrap = document.getElementById('curveWrap');
-    var cs = getComputedStyle(c);
-    var w = c.clientWidth || (wrap ? wrap.clientWidth - 16 : 0) || parseInt(cs.width) || 560;
-    var h = c.clientHeight || parseInt(cs.height) || 160;
-    return {w:w, h:h};
-  }
-
-  // ---------- Fechas ----------
+  /* ===== Date utilities ===== */
   function toISO(d){ return d.toISOString().slice(0,10); }
   function fromISO(s){ var A=s.split('-'); return new Date(Number(A[0]),Number(A[1])-1,Number(A[2])); }
-  function addMonths(d, months){
-    var dt = new Date(d.getTime()), day = dt.getDate();
+  function addMonths(d,months){
+    var dt=new Date(d.getTime()), day=dt.getDate();
     dt.setDate(1); dt.setMonth(dt.getMonth()+months);
-    var lastDay = new Date(dt.getFullYear(), dt.getMonth()+1, 0).getDate();
-    dt.setDate(Math.min(day,lastDay)); return dt;
+    var last=new Date(dt.getFullYear(),dt.getMonth()+1,0).getDate();
+    dt.setDate(Math.min(day,last)); return dt;
   }
   function daysBetween(a,b){ return Math.round((b-a)/(1000*60*60*24)); }
 
-  // ---------- Tasas ----------
+  /* ===== Rate management ===== */
   function normalizeRatePeriods(periods){
-    var rps = periods.map(function(p){ return {
-      start: (p.start instanceof Date) ? p.start : fromISO(p.start),
-      end: p.end ? ((p.end instanceof Date)? p.end : fromISO(p.end)) : null,
-      annual_rate: Number(p.annual_rate)
-    }; }).sort(function(a,b){ return a.start - b.start; });
-    return rps;
+    return periods.map(function(p){
+      return {
+        start:(p.start instanceof Date)?p.start:fromISO(p.start),
+        end:p.end?((p.end instanceof Date)?p.end:fromISO(p.end)):null,
+        annual_rate:Number(p.annual_rate)
+      };
+    }).sort(function(a,b){ return a.start-b.start; });
   }
-  function rateAt(date, periods){
-    var norm = normalizeRatePeriods(periods);
-    if (!norm.length) return 0;
-    for (var i=0;i<norm.length;i++){
-      var rp = norm[i];
-      var endEx = rp.end ? new Date(rp.end.getFullYear(), rp.end.getMonth(), rp.end.getDate()+1) : null;
-      if (rp.start <= date && (!endEx || date < endEx)) return rp.annual_rate;
+  function rateAt(date,periods){
+    var norm=normalizeRatePeriods(periods);
+    if(!norm.length) return 0;
+    for(var i=0;i<norm.length;i++){
+      var rp=norm[i];
+      var endEx=rp.end?new Date(rp.end.getFullYear(),rp.end.getMonth(),rp.end.getDate()+1):null;
+      if(rp.start<=date&&(!endEx||date<endEx)) return rp.annual_rate;
     }
     return norm[0].annual_rate;
   }
 
-  // ---------- Penalización ----------
-  function penaltyPctIfApplies(startDate, extraDate, penaltyMonths, penaltyPct){
-    if (!extraDate || penaltyMonths<=0 || penaltyPct<=0) return 0;
-    var cutoff = addMonths(startDate, penaltyMonths);
-    return (extraDate <= cutoff) ? penaltyPct : 0.0;
+  /* ===== Penalty ===== */
+  function penaltyPctIfApplies(startDate,extraDate,penaltyMonths,penaltyPct){
+    if(!extraDate||penaltyMonths<=0||penaltyPct<=0) return 0;
+    var cutoff=addMonths(startDate,penaltyMonths);
+    return (extraDate<=cutoff)?penaltyPct:0.0;
   }
-  function round2(n){ return Math.round((n + 1e-12)*100)/100; }
+  function round2(n){ return Math.round((n+1e-12)*100)/100; }
 
-  // ---------- Aportes del mes ----------
-  function monthlies(prev, due, recurCfg){
-    if (!(recurCfg && recurCfg.on && recurCfg.amount>0 && recurCfg.start)) return null;
-    var start = (recurCfg.start instanceof Date)? recurCfg.start : fromISO(recurCfg.start);
-    if (due < start) return null;
-    var monthsFromStart = (due.getFullYear()-start.getFullYear())*12 + (due.getMonth()-start.getMonth());
-    if (recurCfg.months && monthsFromStart >= recurCfg.months) return null;
-    var d = new Date(due.getTime()-1); // al final del mes
-    return {date: d, amount: Number(recurCfg.amount), mode: (recurCfg.mode||'plazo')};
+  /* ===== Extra payment logic ===== */
+  function monthlies(prev,due,recurCfg){
+    if(!(recurCfg&&recurCfg.on&&recurCfg.amount>0&&recurCfg.start)) return null;
+    var start=(recurCfg.start instanceof Date)?recurCfg.start:fromISO(recurCfg.start);
+    if(due<start) return null;
+    var mfs=(due.getFullYear()-start.getFullYear())*12+(due.getMonth()-start.getMonth());
+    if(recurCfg.months&&mfs>=recurCfg.months) return null;
+    var d=new Date(due.getTime()-1);
+    return {date:d,amount:Number(recurCfg.amount),mode:(recurCfg.mode||'plazo')};
   }
-  function extrasInMonth(prev, due, extraEvents, recurCfg){
+  function extrasInMonth(prev,due,extraEvents,recurCfg){
     var list=[];
-    // Puntuales
-    for (var i=0;i<extraEvents.length;i++){
-      var ev = extraEvents[i]; if (!ev) continue;
-      var d = (ev.date instanceof Date)? ev.date : fromISO(ev.date);
-      var a = Number(ev.amount)||0;
-      if (a>0 && d>prev && d<=due) list.push({date:d, amount:a, mode:(ev.mode||'plazo')});
+    for(var i=0;i<extraEvents.length;i++){
+      var ev=extraEvents[i]; if(!ev) continue;
+      var d=(ev.date instanceof Date)?ev.date:fromISO(ev.date);
+      var a=Number(ev.amount)||0;
+      if(a>0&&d>prev&&d<=due) list.push({date:d,amount:a,mode:(ev.mode||'plazo')});
     }
-    // Recurrente mensual
-    var m = monthlies(prev,due,recurCfg);
-    if (m) list.push(m);
+    var m=monthlies(prev,due,recurCfg);
+    if(m) list.push(m);
     list.sort(function(a,b){ return a.date-b.date; });
     return list;
   }
 
-  // ---------- N_eff (meses remanentes) ----------
-  function effectiveRemainingMonths(balance, monthlyRate, payment){
-    if (balance <= 1e-9) return 0;
-    if (monthlyRate <= 0) return Math.ceil(balance / payment);
-    var r = monthlyRate;
-    var ratio = 1 - (balance * r / payment);
-    if (ratio <= 1e-12) return Infinity;
-    var N = - Math.log(ratio) / Math.log(1+r);
-    return Math.ceil(N);
+  /* ===== Effective remaining months ===== */
+  function effectiveRemainingMonths(balance,monthlyRate,payment){
+    if(balance<=1e-9) return 0;
+    if(monthlyRate<=0) return Math.ceil(balance/payment);
+    var r=monthlyRate, ratio=1-(balance*r/payment);
+    if(ratio<=1e-12) return Infinity;
+    return Math.ceil(-Math.log(ratio)/Math.log(1+r));
   }
 
-  // ---------- Amortización (M/VEN) ----------
+  /* ===== Amortization engine (M/VEN) ===== */
   function amortizationSchedule(opts){
-    var principal = opts.principal;
-    var startDate = opts.startDate;
-    var ratePeriods = opts.ratePeriods;
-    var extraEvents = opts.extraEvents || [];
-    var recurCfg = opts.recurCfg || null;
-    var penaltyPct = (typeof opts.penaltyPct==='number'?opts.penaltyPct:0.03);
-    var penaltyMonths = (typeof opts.penaltyMonths==='number'?opts.penaltyMonths:36);
-    var originalTermMonths = (typeof opts.originalTermMonths==='number'?opts.originalTermMonths:360);
+    var principal=opts.principal, startDate=opts.startDate;
+    var ratePeriods=opts.ratePeriods, extraEvents=opts.extraEvents||[];
+    var recurCfg=opts.recurCfg||null;
+    var penaltyPct=(typeof opts.penaltyPct==='number'?opts.penaltyPct:0.03);
+    var penaltyMonths=(typeof opts.penaltyMonths==='number'?opts.penaltyMonths:36);
+    var originalTermMonths=(typeof opts.originalTermMonths==='number'?opts.originalTermMonths:360);
+    if(!(principal>0)) throw new Error('El monto del préstamo debe ser mayor que cero.');
 
-    if (!(principal>0)) throw new Error("El monto del préstamo debe ser mayor que cero.");
+    var prev=startDate, due=addMonths(startDate,1), bal=principal, rows=[], interestTotal=0;
+    var r0=rateAt(prev,ratePeriods)/12;
+    var currentPayment=(r0>0)
+      ?bal*(r0*Math.pow(1+r0,originalTermMonths))/(Math.pow(1+r0,originalTermMonths)-1)
+      :bal/originalTermMonths;
+    var targetRemaining=originalTermMonths;
 
-    var prev = startDate;
-    var due  = addMonths(startDate,1);
-    var bal  = principal;
-    var rows=[];
-    var interestTotal=0;
-
-    // Cuota inicial para cerrar en 'originalTermMonths' con la tasa del 1er mes
-    var r0 = rateAt(prev, ratePeriods)/12;
-    var currentPayment = (r0>0)
-      ? bal * (r0*Math.pow(1+r0, originalTermMonths)) / (Math.pow(1+r0, originalTermMonths)-1)
-      : bal / originalTermMonths;
-
-    var targetRemaining = originalTermMonths;
-
-    for (var i=1; i<=originalTermMonths*2; i++){
-      if (bal<=1e-6) break;
-
-      var rAnnual = rateAt(prev, ratePeriods);
-      var rMonthly = rAnnual/12;
-
-      // Cambio de tasa → ajustar cuota manteniendo meses ganados
-      if (i>1){
-        var rPrev = rateAt(addMonths(prev,-1), ratePeriods)/12;
-        if (Math.abs(rMonthly - rPrev) > 1e-12){
-          var N_eff = effectiveRemainingMonths(bal, rMonthly, currentPayment);
-          targetRemaining = Math.min(targetRemaining, N_eff);
-          if (!isFinite(targetRemaining) || targetRemaining<1) targetRemaining = 1;
-          currentPayment = (rMonthly>0)
-            ? bal * (rMonthly*Math.pow(1+rMonthly, targetRemaining)) / (Math.pow(1+rMonthly, targetRemaining)-1)
-            : bal / targetRemaining;
+    for(var i=1;i<=originalTermMonths*2;i++){
+      if(bal<=1e-6) break;
+      var rAnnual=rateAt(prev,ratePeriods), rMonthly=rAnnual/12;
+      if(i>1){
+        var rPrev=rateAt(addMonths(prev,-1),ratePeriods)/12;
+        if(Math.abs(rMonthly-rPrev)>1e-12){
+          var N_eff=effectiveRemainingMonths(bal,rMonthly,currentPayment);
+          targetRemaining=Math.min(targetRemaining,N_eff);
+          if(!isFinite(targetRemaining)||targetRemaining<1) targetRemaining=1;
+          currentPayment=(rMonthly>0)
+            ?bal*(rMonthly*Math.pow(1+rMonthly,targetRemaining))/(Math.pow(1+rMonthly,targetRemaining)-1)
+            :bal/targetRemaining;
         }
       }
-
-      var daysInMonth = Math.max(1, daysBetween(prev, due));
-      var interestThis=0, extraThis=0, penaltyThis=0;
-      var cursor = prev;
-
-      // Aportes del mes
-      var monthExtras = extrasInMonth(prev, due, extraEvents, recurCfg);
-      for (var j=0;j<monthExtras.length;j++){
-        if (bal<=1e-6) break;
-        var ev = monthExtras[j];
-        var segDays = Math.max(0, daysBetween(cursor, ev.date));
-        if (segDays>0){
-          interestThis += bal * rMonthly * (segDays/daysInMonth);
-          cursor = ev.date;
-        }
-        var gross = Math.min(ev.amount, bal);
-        var penPct = penaltyPctIfApplies(startDate, ev.date, penaltyMonths, penaltyPct);
-        var pen    = gross * penPct;
-        var net    = Math.max(0, gross - pen);
-        penaltyThis += pen;
-        bal = Math.max(0, bal - net);
-        extraThis += gross;
-
-        // Ajustar segn efecto seleccionado: plazo o cuota
-        var mode = ev.mode || 'plazo';
-        if (mode === 'plazo'){
-          // Recalcular meses "efectivos" tras el aporte (reducir plazo)
-          var N_eff_now = effectiveRemainingMonths(bal, rMonthly, currentPayment);
-          targetRemaining = Math.min(targetRemaining, N_eff_now);
-          if (targetRemaining < 1) targetRemaining = 1;
+      var daysInMonth=Math.max(1,daysBetween(prev,due));
+      var interestThis=0, extraThis=0, penaltyThis=0, cursor=prev;
+      var monthExtras=extrasInMonth(prev,due,extraEvents,recurCfg);
+      for(var j=0;j<monthExtras.length;j++){
+        if(bal<=1e-6) break;
+        var ev=monthExtras[j];
+        var segDays=Math.max(0,daysBetween(cursor,ev.date));
+        if(segDays>0){ interestThis+=bal*rMonthly*(segDays/daysInMonth); cursor=ev.date; }
+        var gross=Math.min(ev.amount,bal);
+        var penPct=penaltyPctIfApplies(startDate,ev.date,penaltyMonths,penaltyPct);
+        var pen=gross*penPct, net=Math.max(0,gross-pen);
+        penaltyThis+=pen; bal=Math.max(0,bal-net); extraThis+=gross;
+        var mode=ev.mode||'plazo';
+        if(mode==='plazo'){
+          var N_eff_now=effectiveRemainingMonths(bal,rMonthly,currentPayment);
+          targetRemaining=Math.min(targetRemaining,N_eff_now);
+          if(targetRemaining<1) targetRemaining=1;
         } else {
-          // Reducir cuota: recalcular cuota manteniendo los meses objetivo
-          var N_for_payment = Math.max(1, Math.round(targetRemaining));
-          currentPayment = (rMonthly>0)
-            ? bal * (rMonthly*Math.pow(1+rMonthly, N_for_payment)) / (Math.pow(1+rMonthly, N_for_payment)-1)
-            : (N_for_payment>0? bal / N_for_payment : bal);
+          var N_for=Math.max(1,Math.round(targetRemaining));
+          currentPayment=(rMonthly>0)
+            ?bal*(rMonthly*Math.pow(1+rMonthly,N_for))/(Math.pow(1+rMonthly,N_for)-1)
+            :(N_for>0?bal/N_for:bal);
         }
       }
-
-      // tramo restante del mes
-      if (bal>1e-6){
-        var segDays2 = Math.max(0, daysBetween(cursor, due));
-        if (segDays2>0) interestThis += bal * rMonthly * (segDays2/daysInMonth);
+      if(bal>1e-6){
+        var seg2=Math.max(0,daysBetween(cursor,due));
+        if(seg2>0) interestThis+=bal*rMonthly*(seg2/daysInMonth);
       }
-
-      // Pago del mes
-      var payment = currentPayment;
-      if (payment < interestThis && i < originalTermMonths*2){
-        payment = interestThis; // evita amortización negativa
-      }
-
-      var principalPayment = payment - interestThis;
-      if (principalPayment > bal){
-        payment = interestThis + bal;
-        principalPayment = bal;
-      }
-
-      var newBal = Math.max(0, bal - principalPayment);
-
+      var payment=currentPayment;
+      if(payment<interestThis&&i<originalTermMonths*2) payment=interestThis;
+      var principalPayment=payment-interestThis;
+      if(principalPayment>bal){ payment=interestThis+bal; principalPayment=bal; }
+      var newBal=Math.max(0,bal-principalPayment);
       rows.push({
-        Periodo:i, FechaPago: toISO(due),
-        TasaAnualPeriodo: Number((rAnnual*100).toFixed(4)),
-        Interes: round2(interestThis),
-        Amortizacion: round2(principalPayment),
-        Cuota: round2(payment),
-        Penalidad: round2(penaltyThis),
-        AportesExtra: round2(extraThis),
-        SaldoFinal: round2(newBal)
+        Periodo:i, FechaPago:toISO(due),
+        TasaAnualPeriodo:Number((rAnnual*100).toFixed(4)),
+        Interes:round2(interestThis), Amortizacion:round2(principalPayment),
+        Cuota:round2(payment), Penalidad:round2(penaltyThis),
+        AportesExtra:round2(extraThis), SaldoFinal:round2(newBal)
       });
-
-      interestTotal += interestThis;
-      bal = newBal;
-      targetRemaining = Math.max(0, targetRemaining-1);
-      prev = due; due = addMonths(due,1);
+      interestTotal+=interestThis; bal=newBal;
+      targetRemaining=Math.max(0,targetRemaining-1);
+      prev=due; due=addMonths(due,1);
     }
-
-    var endDate = rows.length ? rows[rows.length-1].FechaPago : null;
-    var total_cuotas = rows.reduce(function(s,r){return s + r.Cuota;}, 0);
-    var total_extras = rows.reduce(function(s,r){return s + r.AportesExtra;}, 0);
-    var total_pen    = rows.reduce(function(s,r){return s + r.Penalidad;}, 0);
-    var resumen = {
-      total_interes: round2(interestTotal),
-      total_penalidades: round2(total_pen),
-      total_aportes_bruto: round2(total_extras),
-      total_aportes_neto: round2(total_extras - total_pen),
-      total_pagado: round2(total_cuotas + total_extras + total_pen),
-      meses: rows.length,
-      fecha_finalizacion: endDate
-    };
-    return {rows:rows, resumen:resumen};
+    var endDate=rows.length?rows[rows.length-1].FechaPago:null;
+    var total_cuotas=rows.reduce(function(s,r){return s+r.Cuota;},0);
+    var total_extras=rows.reduce(function(s,r){return s+r.AportesExtra;},0);
+    var total_pen   =rows.reduce(function(s,r){return s+r.Penalidad;},0);
+    return {rows:rows, resumen:{
+      total_interes:round2(interestTotal), total_penalidades:round2(total_pen),
+      total_aportes_bruto:round2(total_extras), total_aportes_neto:round2(total_extras-total_pen),
+      total_pagado:round2(total_cuotas+total_extras+total_pen),
+      meses:rows.length, fecha_finalizacion:endDate
+    }};
   }
 
-  // ---------- UI ----------
-  var allowCalc = false;
+  /* ===== UI helpers ===== */
+  var allowCalc=false;
   function $(sel){ return document.querySelector(sel); }
-  function fmtCRC(n){ try{ return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC'}).format(n);}catch(e){ return '₡'+(Math.round(n).toString()); } }
+  function fmtCRC(n){
+    try{ return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC'}).format(n); }
+    catch(e){ return '₡'+Math.round(n); }
+  }
+  function fmtCRCshort(n){
+    if(Math.abs(n)>=1e9) return '₡'+(n/1e9).toFixed(1)+'B';
+    if(Math.abs(n)>=1e6) return '₡'+(n/1e6).toFixed(1)+'M';
+    if(Math.abs(n)>=1e3) return '₡'+(n/1e3).toFixed(0)+'K';
+    return '₡'+Math.round(n);
+  }
 
-  // Tasas UI
+  /* ===== Rate UI ===== */
   var ratesBox;
-  function rateRowTemplate(obj, i){
+  function rateRowTemplate(obj,i){
     var start=obj.start, end=obj.end, annual=obj.annual_rate;
-    var rateStr = (typeof annual === 'number' && isFinite(annual)) ? (annual*100).toFixed(4) : '';
-    var delBtn = (i===0) ? '<div></div>' : '<div><label>&nbsp;</label><button class="btn btn-danger btn-xs" data-del="'+i+'">✕</button></div>';
-    var html = '';
-    html += '<div class="row4" data-row="'+i+'">';
-    html +=   '<div><label>Inicio</label><input type="date" class="r-start" value="'+start+'"></div>';
-    html +=   '<div><label>Fin</label><input type="date" class="r-end" value="'+(end||'')+'"></div>';
-    html +=   '<div><label>Tasa anual (%)</label><input type="number" class="r-rate" step="0.0001" min="0" max="100" value="'+rateStr+'"></div>';
-    html +=   delBtn;
-    html += '</div>';
-    return html;
+    var rateStr=(typeof annual==='number'&&isFinite(annual))?(annual*100).toFixed(4):'';
+    var delBtn=(i===0)?'<div></div>':'<div><label>&nbsp;</label><button class="btn btn-danger btn-xs" data-del="'+i+'">✕</button></div>';
+    return '<div class="row4" data-row="'+i+'">'+
+      '<div><label>Inicio</label><input type="date" class="r-start" value="'+start+'"></div>'+
+      '<div><label>Fin</label><input type="date" class="r-end" value="'+(end||'')+'"></div>'+
+      '<div><label>Tasa anual (%)</label><input type="number" class="r-rate" step="0.0001" min="0" max="100" value="'+rateStr+'"></div>'+
+      delBtn+'</div>';
   }
   function initDefaultRates(){
-    var startDateEl = $('#startDate');
-    var startDate = (startDateEl && startDateEl.value) ? startDateEl.value : '2023-03-07';
-    var s = fromISO(startDate);
-    var end1 = toISO(addMonths(s,36));
-    return [
-      {start: startDate, end: end1, annual_rate: 0.0755},
-      {start: end1, end: null, annual_rate: 0.0840}
-    ];
+    var startDateEl=$('#startDate');
+    var startDate=(startDateEl&&startDateEl.value)?startDateEl.value:'2023-03-07';
+    var s=fromISO(startDate), end1=toISO(addMonths(s,36));
+    return [{start:startDate,end:end1,annual_rate:0.0755},{start:end1,end:null,annual_rate:0.0840}];
   }
   var rateRows;
   function renderRates(){
-    var html = '';
-    for (var i=0;i<rateRows.length;i++){ html += rateRowTemplate(rateRows[i], i); }
-    ratesBox.innerHTML = html;
+    var html='';
+    for(var i=0;i<rateRows.length;i++) html+=rateRowTemplate(rateRows[i],i);
+    ratesBox.innerHTML=html;
   }
   function readRates(){
-    var out=[];
-    var rows = ratesBox.querySelectorAll('.row4');
-    for (var i=0;i<rows.length;i++){
-      var row = rows[i];
+    var out=[], rows=ratesBox.querySelectorAll('.row4');
+    for(var i=0;i<rows.length;i++){
+      var row=rows[i];
       var start=row.querySelector('.r-start').value;
       var end=row.querySelector('.r-end').value;
       var rate=Number(row.querySelector('.r-rate').value)/100;
-      if (!start || !/^\d{4}-\d{2}-\d{2}$/.test(start)){
-        throw new Error('Fecha de inicio inválida en periodo '+(i+1));
-      }
-      if (end && !/^\d{4}-\d{2}-\d{2}$/.test(end)){
-        throw new Error('Fecha fin inválida en periodo '+(i+1));
-      }
-      if (!(rate>0 && rate<=1)){
-        throw new Error('Tasa anual (%) inválida en periodo '+(i+1));
-      }
-      if (end && fromISO(end) <= fromISO(start)){
-        throw new Error('La fecha fin debe ser posterior a la inicial en periodo '+(i+1));
-      }
-      out.push({start:start, end:end||null, annual_rate: rate});
+      if(!start||!/^\d{4}-\d{2}-\d{2}$/.test(start)) throw new Error('Fecha de inicio inválida en periodo '+(i+1));
+      if(end&&!/^\d{4}-\d{2}-\d{2}$/.test(end)) throw new Error('Fecha fin inválida en periodo '+(i+1));
+      if(!(rate>0&&rate<=1)) throw new Error('Tasa anual (%) inválida en periodo '+(i+1));
+      if(end&&fromISO(end)<=fromISO(start)) throw new Error('La fecha fin debe ser posterior a la inicial en periodo '+(i+1));
+      out.push({start:start,end:end||null,annual_rate:rate});
     }
-    var sorted = out.slice().sort(function(a,b){ return fromISO(a.start) - fromISO(b.start); });
-    for (var j=1;j<sorted.length;j++){
-      var prev = sorted[j-1], curr = sorted[j];
-      if (!prev.end || fromISO(prev.end) > fromISO(curr.start)){
-        throw new Error('Los periodos de tasas no deben traslaparse');
-      }
+    var sorted=out.slice().sort(function(a,b){ return fromISO(a.start)-fromISO(b.start); });
+    for(var j=1;j<sorted.length;j++){
+      var prev=sorted[j-1], curr=sorted[j];
+      if(!prev.end||fromISO(prev.end)>fromISO(curr.start)) throw new Error('Los periodos de tasas no deben traslaparse');
     }
     return out;
   }
 
-  // Aportes puntuales UI
-  var extras = [];
-  var extrasList;
+  /* ===== Extras UI ===== */
+  var extras=[], extrasList;
   function renderExtras(){
-    if (!extras.length){
-      extrasList.innerHTML = '<div class="note">Sin aportes puntuales agregados.</div>'; return;
-    }
+    if(!extras.length){ extrasList.innerHTML='<div class="note" style="margin-bottom:6px">Sin aportes puntuales.</div>'; return; }
     var rows='';
-    for (var i=0;i<extras.length;i++){
-      var e = extras[i];
-      rows += '<tr><td>'+(i+1)+'</td><td style="text-align:center">'+e.date+'</td><td>'+fmtCRC(e.amount)+'</td><td><button data-del="'+i+'" class="btn btn-danger btn-xs">✕</button></td></tr>';
+    for(var i=0;i<extras.length;i++){
+      var e=extras[i];
+      rows+='<tr><td>'+(i+1)+'</td><td style="text-align:center">'+e.date+'</td><td>'+fmtCRC(e.amount)+'</td>'+
+        '<td style="text-align:center"><span class="pill" style="font-size:.72rem">'+e.mode+'</span></td>'+
+        '<td><button data-del="'+i+'" class="btn btn-danger btn-xs">✕</button></td></tr>';
     }
-    var html='';
-    html += '<div class="mini-table">';
-    html +=   '<table>';
-    html +=     '<thead><tr><th>#</th><th>Fecha</th><th>Monto</th><th>✕</th></tr></thead>';
-    html +=     '<tbody>'+rows+'</tbody>';
-    html +=   '</table>';
-    html += '</div>';
-    extrasList.innerHTML = html;
+    extrasList.innerHTML='<div class="mini-table"><table>'+
+      '<thead><tr><th>#</th><th>Fecha</th><th>Monto</th><th>Efecto</th><th>✕</th></tr></thead>'+
+      '<tbody>'+rows+'</tbody></table></div>';
   }
 
-  // Restricción de entradas numéricas
-  function restrictNumericInput(el){
-    el.addEventListener('keydown', function(ev){
-      var invalid = ['e','E','+','-'];
-      if (invalid.indexOf(ev.key)>=0) ev.preventDefault();
-    });
-    el.addEventListener('input', function(){ el.value = el.value.replace(/,/g,'').replace(/\s+/g,''); });
-  }
-
-  // Lectura de inputs
+  /* ===== Read inputs ===== */
   function readInputs(){
-    var principal = Number(document.querySelector('#principal').value);
-    var sd = document.querySelector('#startDate').value;
-    if (!sd || !/^\d{4}-\d{2}-\d{2}$/.test(sd)){ throw new Error('Fecha de inicio inválida. Use AAAA-MM-DD.'); }
-    var startDate = fromISO(sd);
-    var origTerm = Number(document.querySelector('#origTerm').value);
-    if (!(origTerm>0)){ throw new Error('Plazo original inválido.'); }
-    var penaltyPct = Number(document.querySelector('#penaltyPct').value)/100;
-    var penaltyMonths = Number(document.querySelector('#penaltyMonths').value)||0;
-    var recurOn = document.querySelector('#recurOn').value==='si';
-    var recurStartStr = document.querySelector('#recurStart').value;
-    var recurAmount = Number(document.querySelector('#recurAmount').value)||0;
-    var recurEffect = (document.querySelector('#recurEffect') && document.querySelector('#recurEffect').value) || 'plazo';
-    var recurMonths = Number(document.querySelector('#recurMonths').value)||null;
-    var ratePeriods = readRates();
-    var recur = (recurOn && recurAmount>0 && recurStartStr) ? {on:true, amount:recurAmount, start:recurStartStr, months:recurMonths, mode:recurEffect} : null;
-
-    if (!(principal>0)) throw new Error('El monto del préstamo debe ser mayor que cero.');
-
-    return { principal:principal, startDate:startDate, origTerm:origTerm, penaltyPct:penaltyPct, penaltyMonths:penaltyMonths, extras:extras, recur:recur, ratePeriods:ratePeriods };
+    var principal=Number($('#principal').value);
+    var sd=$('#startDate').value;
+    if(!sd||!/^\d{4}-\d{2}-\d{2}$/.test(sd)) throw new Error('Fecha de inicio inválida. Use AAAA-MM-DD.');
+    var startDate=fromISO(sd);
+    var origTerm=Number($('#origTerm').value);
+    if(!(origTerm>0)) throw new Error('Plazo original inválido.');
+    var penaltyPct=Number($('#penaltyPct').value)/100;
+    var penaltyMonths=Number($('#penaltyMonths').value)||0;
+    var recurOn=$('#recurOn').value==='si';
+    var recurStartStr=$('#recurStart').value;
+    var recurAmount=Number($('#recurAmount').value)||0;
+    var recurEffect=($('#recurEffect')&&$('#recurEffect').value)||'plazo';
+    var recurMonths=Number($('#recurMonths').value)||null;
+    var ratePeriods=readRates();
+    var recur=(recurOn&&recurAmount>0&&recurStartStr)?{on:true,amount:recurAmount,start:recurStartStr,months:recurMonths,mode:recurEffect}:null;
+    if(!(principal>0)) throw new Error('El monto del préstamo debe ser mayor que cero.');
+    return {principal,startDate,origTerm,penaltyPct,penaltyMonths,extras,recur,ratePeriods};
   }
 
-  // Resúmenes
-  function summarizeBase(id, sum){
-    var el=document.querySelector(id);
-    if (!sum){ el.innerHTML=''; return; }
-    el.innerHTML =
-      '<div class="stat"><span class="pill">Total interés</span> <b>'+fmtCRC(sum.total_interes)+'</b></div>'+
-      '<div class="stat"><span class="pill">Total pagado</span> <b>'+fmtCRC(sum.total_pagado)+'</b></div>'+
-      '<div class="stat"><span class="pill">Meses</span> <b>'+sum.meses+'</b></div>'+
-      '<div class="stat"><span class="pill">Fecha fin</span> <b>'+(sum.fecha_finalizacion||'-')+'</b></div>';
+  /* ===== Summary rendering ===== */
+  function summarizeBase(id,sum){
+    var el=$(id); if(!sum){el.innerHTML='';return;}
+    el.innerHTML=
+      '<div class="stat"><span class="stat-label">Total interés</span><b>'+fmtCRC(sum.total_interes)+'</b></div>'+
+      '<div class="stat"><span class="stat-label">Total pagado</span><b>'+fmtCRC(sum.total_pagado)+'</b></div>'+
+      '<div class="stat"><span class="stat-label">Meses</span><b>'+sum.meses+'</b></div>'+
+      '<div class="stat"><span class="stat-label">Fecha fin</span><b>'+(sum.fecha_finalizacion||'—')+'</b></div>';
   }
-  function summarizeAporte(id, sum){
-    var el=document.querySelector(id);
-    if (!sum){ el.innerHTML=''; return; }
-    var penCls = (sum.total_penalidades>0)?'bad':'';
-    el.innerHTML =
-      '<div class="stat"><span class="pill">Total interés</span> <b>'+fmtCRC(sum.total_interes)+'</b></div>'+
-      '<div class="stat"><span class="pill">Penalidades</span> <b class="'+penCls+'">'+fmtCRC(sum.total_penalidades)+'</b></div>'+
-      '<div class="stat"><span class="pill">Total aportes bruto</span> <b>'+fmtCRC(sum.total_aportes_bruto)+'</b></div>'+
-      '<div class="stat"><span class="pill">Total aportes neto</span> <b>'+fmtCRC(sum.total_aportes_neto)+'</b></div>'+
-      '<div class="stat"><span class="pill">Total pagado</span> <b>'+fmtCRC(sum.total_pagado)+'</b></div>'+
-      '<div class="stat"><span class="pill">Meses</span> <b>'+sum.meses+'</b></div>'+
-      '<div class="stat"><span class="pill">Fecha fin</span> <b>'+(sum.fecha_finalizacion||'-')+'</b></div>';
+  function summarizeAporte(id,sum){
+    var el=$(id); if(!sum){el.innerHTML='';return;}
+    var penCls=(sum.total_penalidades>0)?'bad':'';
+    el.innerHTML=
+      '<div class="stat"><span class="stat-label">Total interés</span><b>'+fmtCRC(sum.total_interes)+'</b></div>'+
+      (sum.total_penalidades>0?'<div class="stat"><span class="stat-label">Penalidades</span><b class="'+penCls+'">'+fmtCRC(sum.total_penalidades)+'</b></div>':'')+
+      '<div class="stat"><span class="stat-label">Aportes bruto</span><b>'+fmtCRC(sum.total_aportes_bruto)+'</b></div>'+
+      '<div class="stat"><span class="stat-label">Aportes neto</span><b>'+fmtCRC(sum.total_aportes_neto)+'</b></div>'+
+      '<div class="stat"><span class="stat-label">Total pagado</span><b>'+fmtCRC(sum.total_pagado)+'</b></div>'+
+      '<div class="stat"><span class="stat-label">Meses</span><b>'+sum.meses+'</b></div>'+
+      '<div class="stat"><span class="stat-label">Fecha fin</span><b>'+(sum.fecha_finalizacion||'—')+'</b></div>';
   }
-  function summarizeDiff(base, aporte){
-    var el = document.querySelector('#summaryDiff');
-    if (!base || !aporte){ el.innerHTML=''; return; }
-    var ahorroBruto = base.total_interes - aporte.total_interes;
-    var penalPagadas = aporte.total_penalidades;
-    var ahorroNeto  = ahorroBruto - penalPagadas;
-    var mesesLess   = base.meses - aporte.meses;
-    var abCls = (ahorroBruto>0)?'ok':'';
-    var penCls = (penalPagadas>0)?'bad':'';
-    var netCls = (ahorroNeto>=0)?'ok':'bad';
-    el.innerHTML =
-      '<div class="stat"><span class="pill">Ahorro bruto interés</span> <b class="'+abCls+'">'+fmtCRC(ahorroBruto)+'</b></div>'+
-      '<div class="stat"><span class="pill">Penalidades pagadas (aportes)</span> <b class="'+penCls+'">'+fmtCRC(penalPagadas)+'</b></div>'+
-      '<div class="stat"><span class="pill">Ahorro neto (– penal.)</span> <b class="'+netCls+'">'+fmtCRC(ahorroNeto)+'</b></div>'+
-      '<div class="stat"><span class="pill">Reducción de meses</span> <b class="'+(mesesLess>=0?'ok':'warn')+'">'+mesesLess+'</b></div>';
-  }
-
-  // Cronograma
-  function renderSchedule(rows){
-    var tb = document.querySelector('#sched tbody');
+  function summarizeDiff(base,aporte){
+    var el=$('#summaryDiff'); if(!base||!aporte){el.innerHTML='';return;}
+    var ahorroBruto=base.total_interes-aporte.total_interes;
+    var penalPagadas=aporte.total_penalidades;
+    var ahorroNeto=ahorroBruto-penalPagadas;
+    var mesesLess=base.meses-aporte.meses;
+    var netCls=(ahorroNeto>=0)?'ok':'bad';
+    var netLabel=(ahorroNeto>=0)?'Ahorro neto en intereses':'Costo neto adicional';
     var html='';
-    for (var i=0;i<rows.length;i++){
-      var r = rows[i];
-      html += '<tr>'+
+    if(ahorroBruto!==0){
+      html+='<div class="savings-big">'+
+        '<span class="savings-amount '+netCls+'" id="savingsAmountEl">'+fmtCRC(Math.abs(ahorroNeto))+'</span>'+
+        '<div class="savings-caption">'+netLabel+'</div>'+
+        '</div>';
+    }
+    html+=
+      '<div class="stat"><span class="stat-label">Ahorro bruto</span><b class="ok">'+fmtCRC(ahorroBruto)+'</b></div>'+
+      (penalPagadas>0?'<div class="stat"><span class="stat-label">Penalidades pagadas</span><b class="bad">−'+fmtCRC(penalPagadas)+'</b></div>':'')+
+      '<div class="stat"><span class="stat-label">Reducción de plazo</span><b class="'+(mesesLess>=0?'ok':'warn')+'">'+mesesLess+' meses</b></div>';
+    el.innerHTML=html;
+    /* Animate the big savings number */
+    if(ahorroBruto!==0&&typeof gsap!=='undefined'){
+      var savEl=document.getElementById('savingsAmountEl');
+      if(savEl){
+        var obj={val:0}, final=Math.abs(ahorroNeto);
+        gsap.to(obj,{val:final,duration:1.4,ease:'power2.out',
+          onUpdate:function(){ savEl.textContent=fmtCRC(obj.val); }});
+      }
+    }
+  }
+
+  /* ===== Schedule rendering ===== */
+  function renderSchedule(rows){
+    var tb=$('#sched tbody'), html='';
+    for(var i=0;i<rows.length;i++){
+      var r=rows[i];
+      html+='<tr>'+
         '<td>'+r.Periodo+'</td><td>'+r.FechaPago+'</td><td></td>'+
         '<td>'+r.TasaAnualPeriodo.toFixed(4)+'%</td>'+
         '<td>'+fmtCRC(r.Interes)+'</td><td>'+fmtCRC(r.Amortizacion)+'</td>'+
-        '<td>'+fmtCRC(r.Cuota)+'</td><td>'+fmtCRC(r.Penalidad)+'</td>'+
-        '<td>'+fmtCRC(r.AportesExtra)+'</td><td>'+fmtCRC(r.SaldoFinal)+'</td>'+
+        '<td>'+fmtCRC(r.Cuota)+'</td>'+
+        '<td>'+(r.Penalidad>0?'<span class="bad">'+fmtCRC(r.Penalidad)+'</span>':fmtCRC(r.Penalidad))+'</td>'+
+        '<td>'+(r.AportesExtra>0?'<span class="ok">'+fmtCRC(r.AportesExtra)+'</span>':fmtCRC(r.AportesExtra))+'</td>'+
+        '<td>'+fmtCRC(r.SaldoFinal)+'</td>'+
       '</tr>';
     }
-    tb.innerHTML = html;
+    tb.innerHTML=html;
   }
 
-  // --------- Mini chart (Canvas) con tooltips ---------
-  var miniChartState = { data:null, hoverIndex:null };
-  function curveDataYearly(rows, startDate, principal){
-    var map = {}; // objeto simple p/ compat
-    var y0 = startDate.getFullYear();
-    map[y0] = principal;
-    for (var i=0;i<rows.length;i++){
-      var r = rows[i];
-      var y = Number(r.FechaPago.slice(0,4));
-      map[y] = r.SaldoFinal;
-      if (r.SaldoFinal <= 1e-6) break;
+  /* ===== Chart.js ===== */
+  var balanceChart=null;
+  function curveDataYearly(rows,startDate,principal){
+    var map={}, y0=startDate.getFullYear();
+    map[y0]=principal;
+    for(var i=0;i<rows.length;i++){
+      var r=rows[i], y=Number(r.FechaPago.slice(0,4));
+      map[y]=r.SaldoFinal; if(r.SaldoFinal<=1e-6) break;
     }
-    var years = Object.keys(map).map(function(k){return Number(k);}).sort(function(a,b){return a-b;});
-    var balances = years.map(function(y){ return map[y]; });
-    return {years:years, balances:balances};
+    var years=Object.keys(map).map(Number).sort(function(a,b){return a-b;});
+    return {years:years, balances:years.map(function(y){return map[y];})};
   }
-  function drawFromState(){
-    if (!miniChartState.data) return;
-    var data = miniChartState.data;
-    var base = data.base, ap = data.ap, hasAportes = data.hasAportes, principal = data.principal;
-    var c = document.getElementById('miniChart'); if (!c) return;
-    var dpr = window.devicePixelRatio || 1;
-    var dims = canvasDims(c);
-    var cssW = dims.w, cssH = dims.h;
-    c.width = Math.round(cssW*dpr); c.height = Math.round(cssH*dpr);
-    var ctx = c.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
-
-    var years = base.years.slice();
-    if (hasAportes){
-      for (var i=0;i<ap.years.length;i++){ if (years.indexOf(ap.years[i])<0) years.push(ap.years[i]); }
-    }
-    years.sort(function(a,b){return a-b;});
-
-    var maxY = principal;
-    for (var i2=0;i2<base.balances.length;i2++){ if (base.balances[i2]>maxY) maxY=base.balances[i2]; }
-    if (hasAportes){ for (var i3=0;i3<ap.balances.length;i3++){ if (ap.balances[i3]>maxY) maxY=ap.balances[i3]; } }
-    var minY = 0;
-
-    var pad = {L:36, R:10, T:8, B:24};
-    var W = cssW - pad.L - pad.R;
-    var H = cssH - pad.T - pad.B;
-    function xPos(i){ return pad.L + (W * (i/(years.length-1 || 1))); }
-    function yScale(v){ return pad.T + H - (H * ((v-minY)/(maxY-minY || 1))); }
-
-    ctx.clearRect(0,0,cssW,cssH);
-    ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(pad.L, pad.T+H); ctx.lineTo(pad.L+W, pad.T+H); ctx.stroke();
-
-    ctx.fillStyle = '#94a3b8'; ctx.font = '11px system-ui';
-    function fmt(v){ try{ return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC', maximumFractionDigits:0}).format(v);}catch(e){ return '₡'+Math.round(v);} }
-    ctx.fillText(fmt(maxY), 4, yScale(maxY)+4);
-    ctx.fillText(fmt(0), 4, yScale(0)+4);
-
-    for (var i4=0;i4<years.length;i4++){
-      var xx = xPos(i4);
-      if (i4===0 || i4===years.length-1 || years.length<=6 || i4%2===0){
-        ctx.fillText(String(years[i4]), xx-10, pad.T+H+14);
-      }
-    }
-
-    // base
-    ctx.strokeStyle = '#9ca3af'; ctx.lineWidth = 2; ctx.beginPath();
-    for (var b=0;b<base.years.length;b++){
-      var yi = years.indexOf(base.years[b]);
-      var xx = xPos(yi), yy = yScale(base.balances[b]);
-      if (b===0) ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy);
-    }
-    ctx.stroke();
-
-    // con aportes
-    if (hasAportes){
-      ctx.strokeStyle = '#22c55e'; ctx.lineWidth = 2; ctx.beginPath();
-      for (var a=0;a<ap.years.length;a++){
-        var yi2 = years.indexOf(ap.years[a]);
-        var xx2 = xPos(yi2), yy2 = yScale(ap.balances[a]);
-        if (a===0) ctx.moveTo(xx2,yy2); else ctx.lineTo(xx2,yy2);
-      }
-      ctx.stroke();
-    }
-
-    var hoverIndex = data.hoverIndex;
-    if (hoverIndex!=null && hoverIndex>=0 && hoverIndex<years.length){
-      var xxh = xPos(hoverIndex);
-      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(xxh, pad.T); ctx.lineTo(xxh, pad.T+H); ctx.stroke();
-
-      var bi = base.years.indexOf(years[hoverIndex]);
-      if (bi>=0){ ctx.fillStyle = '#9ca3af'; ctx.beginPath(); ctx.arc(xxh, yScale(base.balances[bi]), 3, 0, Math.PI*2); ctx.fill(); }
-      if (hasAportes){
-        var ai = ap.years.indexOf(years[hoverIndex]);
-        if (ai>=0){ ctx.fillStyle = '#22c55e'; ctx.beginPath(); ctx.arc(xxh, yScale(ap.balances[ai]), 3, 0, Math.PI*2); ctx.fill(); }
-      }
-
-      var tip = document.getElementById('chartTip');
-      var yValBase = (bi>=0)? base.balances[bi] : null;
-      var yValAp   = (hasAportes && ap.years.indexOf(years[hoverIndex])>=0) ? ap.balances[ap.years.indexOf(years[hoverIndex])] : null;
-      var html = '<b>'+years[hoverIndex]+'</b>';
-      if (yValBase!=null) html += '<div class="muted">Base: '+fmt(yValBase)+'</div>';
-      if (yValAp!=null)   html += '<div>Con aportes: '+fmt(yValAp)+'</div>';
-      tip.innerHTML = html; tip.style.display = 'block';
-
-      var wrap = document.getElementById('curveWrap').getBoundingClientRect();
-      var can  = c.getBoundingClientRect();
-      var relX = (xxh + can.left) - wrap.left + 8;
-      var relY = pad.T + 8;
-      tip.style.left = Math.min(Math.max(relX, 8), wrap.width-160) + 'px';
-      tip.style.top  = relY + 'px';
-    } else {
-      var tip2 = document.getElementById('chartTip'); if (tip2) tip2.style.display = 'none';
-    }
-
-    miniChartState.data.yearsAxis = years;
-    miniChartState.data.xPos = function(i){ return xPos(i); };
-  }
-  function updateMiniChart(baseRows, aporteRows, startDate, principal, hasAportes){
-    var base = curveDataYearly(baseRows, startDate, principal);
-    var ap   = curveDataYearly(aporteRows, startDate, principal);
-    miniChartState.data = { base:base, ap:ap, startDate:startDate, principal:principal, hasAportes:hasAportes, hoverIndex:null };
-    drawFromState();
-    requestAnimationFrame(drawFromState);
-    if (!window._miniChartResizeBound){
-      window.addEventListener('resize', function(){ drawFromState(); });
-      window._miniChartResizeBound = true;
-    }
-    var c = document.getElementById('miniChart');
-    if (!c._listenersBound){
-      c.addEventListener('mousemove', function(ev){
-        if (!miniChartState.data) return;
-        var years = miniChartState.data.yearsAxis;
-        if (!years || !years.length) return;
-        var rect = c.getBoundingClientRect();
-        var cssX = ev.clientX - rect.left;
-        var idx = 0, best=1e9;
-        for (var i=0;i<years.length;i++){
-          var xi = miniChartState.data.xPos(i);
-          var d  = Math.abs(cssX - xi);
-          if (d < best){ best=d; idx=i; }
+  function initChart(){
+    if(typeof Chart==='undefined') return;
+    var canvas=document.getElementById('balanceChart'); if(!canvas) return;
+    if(balanceChart){ balanceChart.destroy(); balanceChart=null; }
+    balanceChart=new Chart(canvas.getContext('2d'),{
+      type:'line',
+      data:{
+        labels:[],
+        datasets:[
+          {label:'Base',data:[],
+           borderColor:'rgba(148,163,184,0.75)',borderWidth:2,
+           borderDash:[5,4],pointRadius:3,pointHoverRadius:5,
+           pointBackgroundColor:'rgba(148,163,184,0.75)',
+           tension:0.35,fill:false},
+          {label:'Con aportes',data:[],
+           borderColor:'#22c55e',borderWidth:2.5,
+           pointRadius:3,pointHoverRadius:5,
+           pointBackgroundColor:'#22c55e',
+           tension:0.35,
+           fill:{target:'origin',above:'rgba(34,197,94,0.07)'}}
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
+        animation:{duration:1100,easing:'easeInOutQuart'},
+        plugins:{
+          legend:{display:true,position:'top',align:'start',
+            labels:{color:'#94a3b8',font:{family:"'Inter',system-ui",size:11},
+              boxWidth:16,boxHeight:2,padding:14}},
+          tooltip:{
+            backgroundColor:'rgba(11,18,32,0.96)',
+            borderColor:'rgba(255,255,255,0.08)',borderWidth:1,
+            titleColor:'#e5e7eb',bodyColor:'#94a3b8',padding:10,
+            callbacks:{label:function(ctx){
+              if(ctx.parsed.y===null) return null;
+              return ctx.dataset.label+': '+fmtCRC(ctx.parsed.y);
+            }}
+          }
+        },
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,0.04)'},
+             border:{color:'rgba(255,255,255,0.08)'},
+             ticks:{color:'#94a3b8',font:{family:"'Inter',system-ui",size:11},maxTicksLimit:10}},
+          y:{grid:{color:'rgba(255,255,255,0.04)'},
+             border:{color:'rgba(255,255,255,0.08)'},
+             ticks:{color:'#94a3b8',font:{family:"'Inter',system-ui",size:11},maxTicksLimit:6,
+               callback:function(v){
+                 if(Math.abs(v)>=1e9) return '₡'+(v/1e9).toFixed(1)+'B';
+                 if(Math.abs(v)>=1e6) return '₡'+(v/1e6).toFixed(1)+'M';
+                 if(Math.abs(v)>=1e3) return '₡'+(v/1e3).toFixed(0)+'K';
+                 return '₡'+v;
+               }}}
         }
-        miniChartState.data.hoverIndex = idx;
-        drawFromState();
-      });
-      c.addEventListener('mouseleave', function(){
-        if (!miniChartState.data) return;
-        miniChartState.data.hoverIndex = null;
-        drawFromState();
-      });
-      c._listenersBound = true;
-    }
+      }
+    });
+  }
+  function updateChart(baseRows,aporteRows,startDate,principal,hasAportes){
+    if(typeof Chart==='undefined') return;
+    var base=curveDataYearly(baseRows,startDate,principal);
+    var ap=curveDataYearly(aporteRows,startDate,principal);
+    var allYears=base.years.slice();
+    for(var i=0;i<ap.years.length;i++) if(allYears.indexOf(ap.years[i])<0) allYears.push(ap.years[i]);
+    allYears.sort(function(a,b){return a-b;});
+    var baseData=allYears.map(function(y){ var idx=base.years.indexOf(y); return idx>=0?base.balances[idx]:null; });
+    var apData=hasAportes?allYears.map(function(y){ var idx=ap.years.indexOf(y); return idx>=0?ap.balances[idx]:null; }):[];
+    if(!balanceChart) initChart();
+    if(!balanceChart) return;
+    balanceChart.data.labels=allYears;
+    balanceChart.data.datasets[0].data=baseData;
+    balanceChart.data.datasets[1].data=apData;
+    balanceChart.data.datasets[1].hidden=!hasAportes;
+    balanceChart.update();
   }
 
-  // --------- Cálculo + render ---------
+  /* ===== Collapsible schedule ===== */
+  var scheduleOpen=false;
+  function openSchedule(count){
+    var body=document.getElementById('scheduleBody');
+    var label=document.getElementById('scheduleToggleLabel');
+    var chevron=document.querySelector('.chevron');
+    body.style.display='block';
+    var h=body.scrollHeight;
+    body.style.height='0px';
+    if(typeof gsap!=='undefined'){
+      gsap.to(body,{height:h,opacity:1,duration:0.4,ease:'power2.out',
+        onComplete:function(){ body.style.height='auto'; }});
+      gsap.to(chevron,{rotation:180,duration:0.3,ease:'power2.inOut'});
+    } else {
+      body.style.height='auto'; body.style.opacity='1';
+    }
+    label.textContent='Ocultar tabla'+(count?' ('+count+' periodos)':'');
+    scheduleOpen=true;
+  }
+  function closeSchedule(){
+    var body=document.getElementById('scheduleBody');
+    var label=document.getElementById('scheduleToggleLabel');
+    var chevron=document.querySelector('.chevron');
+    if(typeof gsap!=='undefined'){
+      gsap.to(body,{height:0,opacity:0,duration:0.3,ease:'power2.in',
+        onComplete:function(){ body.style.display='none'; }});
+      gsap.to(chevron,{rotation:0,duration:0.3,ease:'power2.inOut'});
+    } else {
+      body.style.height='0'; body.style.opacity='0'; body.style.display='none';
+    }
+    label.textContent='Ver tabla';
+    scheduleOpen=false;
+  }
+
+  /* ===== Calculate + render ===== */
   function calculateAndRender(){
-    if (!allowCalc) { return; }
-    var inp = readInputs();
-    // calcular cuota inicial y mostrarla
-    if (inp.ratePeriods.length && inp.origTerm > 0){
-      var r0 = rateAt(inp.startDate, inp.ratePeriods)/12;
-      var cuotaIni = (r0>0)
-        ? inp.principal * (r0*Math.pow(1+r0, inp.origTerm)) / (Math.pow(1+r0, inp.origTerm)-1)
-        : inp.principal / inp.origTerm;
-      document.getElementById('monthlyPayment').value = round2(cuotaIni).toFixed(2);
+    if(!allowCalc) return;
+    var inp=readInputs();
+    if(inp.ratePeriods.length&&inp.origTerm>0){
+      var r0=rateAt(inp.startDate,inp.ratePeriods)/12;
+      var cuotaIni=(r0>0)
+        ?inp.principal*(r0*Math.pow(1+r0,inp.origTerm))/(Math.pow(1+r0,inp.origTerm)-1)
+        :inp.principal/inp.origTerm;
+      document.getElementById('monthlyPayment').value=round2(cuotaIni).toFixed(2);
+    }
+    var base=amortizationSchedule({
+      principal:inp.principal, startDate:inp.startDate, ratePeriods:inp.ratePeriods,
+      extraEvents:[], recurCfg:null, penaltyPct:inp.penaltyPct,
+      penaltyMonths:inp.penaltyMonths, originalTermMonths:inp.origTerm
+    });
+    var aporte=amortizationSchedule({
+      principal:inp.principal, startDate:inp.startDate, ratePeriods:inp.ratePeriods,
+      extraEvents:inp.extras, recurCfg:inp.recur, penaltyPct:inp.penaltyPct,
+      penaltyMonths:inp.penaltyMonths, originalTermMonths:inp.origTerm
+    });
+    summarizeBase('#summaryBase',base.resumen);
+    summarizeAporte('#summaryAporte',aporte.resumen);
+    summarizeDiff(base.resumen,aporte.resumen);
+    renderSchedule(aporte.rows);
+    var hasAportes=(inp.extras&&inp.extras.length>0)||!!inp.recur;
+    updateChart(base.rows,aporte.rows,inp.startDate,inp.principal,hasAportes);
+
+    /* If schedule was open, re-open with updated count */
+    if(scheduleOpen){
+      var body=document.getElementById('scheduleBody');
+      body.style.height='auto';
+      document.getElementById('scheduleToggleLabel').textContent='Ocultar tabla ('+aporte.rows.length+' periodos)';
     }
 
-    // Base (sin aportes)
-    var base = amortizationSchedule({
-      principal: inp.principal, startDate: inp.startDate,
-      ratePeriods: inp.ratePeriods, extraEvents: [], recurCfg: null,
-      penaltyPct: inp.penaltyPct, penaltyMonths: inp.penaltyMonths, originalTermMonths: inp.origTerm
-    });
-    summarizeBase('#summaryBase', base.resumen);
-
-    // Con aportes
-    var aporte = amortizationSchedule({
-      principal: inp.principal, startDate: inp.startDate,
-      ratePeriods: inp.ratePeriods, extraEvents: inp.extras, recurCfg: inp.recur,
-      penaltyPct: inp.penaltyPct, penaltyMonths: inp.penaltyMonths, originalTermMonths: inp.origTerm
-    });
-    summarizeAporte('#summaryAporte', aporte.resumen);
-    summarizeDiff(base.resumen, aporte.resumen);
-    renderSchedule(aporte.rows);
-
-    // Mini chart
-    var hasAportes = (inp.extras && inp.extras.length>0) || !!inp.recur;
-    updateMiniChart(base.rows, aporte.rows, inp.startDate, inp.principal, hasAportes);
-
-    document.querySelector('#msg').textContent = 'Cálculo actualizado: ' + new Date().toLocaleString();
+    /* Animate summary section in */
+    if(typeof gsap!=='undefined'){
+      gsap.fromTo(['#summaryBase','#summaryAporte','#summaryDiff','#curveWrap'],
+        {y:12,opacity:0},
+        {y:0,opacity:1,duration:0.45,stagger:0.07,ease:'power2.out'});
+    }
+    document.getElementById('msg').textContent='Actualizado: '+new Date().toLocaleTimeString();
   }
 
-  // ====== DOM Ready ======
+  /* ===== DOM Ready ===== */
   function onReady(){
     ensureDateInputs();
-    var ratesBoxEl = document.getElementById('rates');
-    ratesBox = ratesBoxEl;
-    extrasList = document.getElementById('extrasList');
-
-    // defaults (sin valores por defecto)
-    rateRows = [];
+    ratesBox=document.getElementById('rates');
+    extrasList=document.getElementById('extrasList');
+    rateRows=[];
     renderRates();
+    renderExtras();
+    initChart();
 
-    // bind events
-      document.getElementById('addRate').addEventListener('click', function(e){
-        e.preventDefault();
-        // preserva valores actuales antes de agregar una fila nueva
-        try{
-          rateRows = readRates();
-        }catch(err){
-          alert(err.message || String(err));
-          return;
-        }
-        var defaultStart = document.getElementById('startDate').value || '';
-        if (rateRows.length > 0){
-          var prev = rateRows[rateRows.length-1];
-          defaultStart = prev.end || prev.start || defaultStart;
-        }
-        rateRows.push({start: defaultStart, end: null, annual_rate:null});
-        renderRates();
-      });
+    /* Page load GSAP entrance */
+    if(typeof gsap!=='undefined'){
+      gsap.from('.card',{y:22,opacity:0,duration:0.55,stagger:0.07,ease:'power2.out',delay:0.05});
+    }
 
-    ratesBox.addEventListener('click', function(e){
-      var del = e.target && e.target.getAttribute('data-del');
-      if (del!==null && del!==undefined){
-        // sincroniza valores editados antes de eliminar
-        try{
-          rateRows = readRates();
-        }catch(err){
-          alert(err.message || String(err));
-          return;
-        }
-        var idx = Number(del);
-        if (idx>0){ rateRows.splice(idx,1); renderRates(); }
+    /* Rate controls */
+    document.getElementById('addRate').addEventListener('click',function(e){
+      e.preventDefault();
+      try{ rateRows=readRates(); } catch(err){ alert(err.message||String(err)); return; }
+      var defaultStart=document.getElementById('startDate').value||'';
+      if(rateRows.length>0){ var p=rateRows[rateRows.length-1]; defaultStart=p.end||p.start||defaultStart; }
+      rateRows.push({start:defaultStart,end:null,annual_rate:null}); renderRates();
+    });
+    ratesBox.addEventListener('click',function(e){
+      var del=e.target&&e.target.getAttribute('data-del');
+      if(del!==null&&del!==undefined){
+        try{ rateRows=readRates(); } catch(err){ alert(err.message||String(err)); return; }
+        var idx=Number(del); if(idx>0){ rateRows.splice(idx,1); renderRates(); }
       }
     });
+    document.getElementById('startDate').addEventListener('change',function(){ ensureDateInputs(); });
 
-    document.getElementById('startDate').addEventListener('change', function(){
-      ensureDateInputs();
+    /* Extras controls */
+    document.getElementById('addExtra').addEventListener('click',function(){
+      var d=document.getElementById('exDate').value;
+      var a=Number(document.getElementById('exAmount').value);
+      var eff=(document.getElementById('exEffect')&&document.getElementById('exEffect').value)||'plazo';
+      if(!d||!(a>0)){ alert('Complete fecha y monto > 0'); return; }
+      extras.push({date:d,amount:a,mode:eff}); renderExtras();
+    });
+    extrasList.addEventListener('click',function(e){
+      var idx=e.target&&e.target.getAttribute('data-del');
+      if(idx!==null&&idx!==undefined){ extras.splice(Number(idx),1); renderExtras(); }
     });
 
-    document.getElementById('addExtra').addEventListener('click', function(){
-      var d = document.getElementById('exDate').value;
-      var a = Number(document.getElementById('exAmount').value);
-      var eff = (document.getElementById('exEffect') && document.getElementById('exEffect').value) || 'plazo';
-      if (!d || !(a>0)) { alert('Complete fecha y monto > 0'); return; }
-      extras.push({date:d, amount:a, mode: eff}); renderExtras();
-    });
-    extrasList.addEventListener('click', function(e){
-      var idx = e.target && e.target.getAttribute('data-del');
-      if (idx!==null && idx!==undefined){ extras.splice(Number(idx),1); renderExtras(); }
-    });
-
-    // restrict numeric
+    /* Numeric restrictions */
     ['principal','monthlyPayment','origTerm','exAmount','recurAmount','penaltyPct','penaltyMonths','recurMonths']
     .forEach(function(id){
-      var el=document.getElementById(id);
-      if (el) {
-        el.addEventListener('keydown', function(ev){
-          var invalid = ['e','E','+','-']; if (invalid.indexOf(ev.key)>=0) ev.preventDefault();
+      var el=document.getElementById(id); if(!el) return;
+      el.addEventListener('keydown',function(ev){
+        if(['e','E','+','-'].indexOf(ev.key)>=0) ev.preventDefault();
+      });
+      el.addEventListener('input',function(){ el.value=el.value.replace(/,/g,'').replace(/\s+/g,''); });
+    });
+
+    /* Calculate button with GSAP spring */
+    var calcBtn=document.getElementById('calc');
+    calcBtn.addEventListener('mousedown',function(){
+      if(typeof gsap!=='undefined') gsap.to(calcBtn,{scale:0.95,duration:0.08,ease:'power2.out'});
+    });
+    calcBtn.addEventListener('mouseup',function(){
+      if(typeof gsap!=='undefined') gsap.to(calcBtn,{scale:1,duration:0.2,ease:'elastic.out(1.2,0.5)'});
+    });
+    calcBtn.addEventListener('mouseleave',function(){
+      if(typeof gsap!=='undefined') gsap.to(calcBtn,{scale:1,duration:0.15,ease:'power2.out'});
+    });
+    calcBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      try{ allowCalc=true; calculateAndRender(); }
+      catch(err){ document.getElementById('msg').textContent=err.message||String(err); }
+    });
+
+    /* CSV export */
+    document.getElementById('exportCsv').addEventListener('click',function(){
+      var tb=$('#sched tbody');
+      if(!tb.children.length){ alert('Primero ejecutá el cálculo.'); return; }
+      try{
+        var inp=readInputs();
+        var aporte=amortizationSchedule({
+          principal:inp.principal, startDate:inp.startDate, ratePeriods:inp.ratePeriods,
+          extraEvents:inp.extras, recurCfg:inp.recur, penaltyPct:inp.penaltyPct,
+          penaltyMonths:inp.penaltyMonths, originalTermMonths:inp.origTerm
         });
-        el.addEventListener('input', function(){ el.value = el.value.replace(/,/g,'').replace(/\s+/g,''); });
+        var header=['Periodo','FechaPago','TasaAnual(%)','Interes','Amortizacion','Cuota','Penalidad','AportesExtra','SaldoFinal'];
+        var lines=[header.join(',')];
+        for(var i=0;i<aporte.rows.length;i++){
+          var r=aporte.rows[i];
+          lines.push([r.Periodo,r.FechaPago,r.TasaAnualPeriodo.toFixed(4),r.Interes,r.Amortizacion,r.Cuota,r.Penalidad,r.AportesExtra,r.SaldoFinal].join(','));
+        }
+        var blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+        var url=URL.createObjectURL(blob);
+        var a=document.createElement('a'); a.href=url; a.download='cronograma_aporte.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      } catch(err){ alert(err.message||String(err)); }
+    });
+
+    /* Toggle schedule */
+    document.getElementById('toggleSchedule').addEventListener('click',function(){
+      if(scheduleOpen) closeSchedule();
+      else {
+        var count=$('#sched tbody').children.length;
+        openSchedule(count||null);
       }
     });
 
-    document.getElementById('calc').addEventListener('click', function(e){
-      e.preventDefault();
-      try{ allowCalc = true; calculateAndRender(); }catch(err){ document.getElementById('msg').textContent = err.message || String(err); }
-    });
-
-    document.getElementById('exportCsv').addEventListener('click', function(){
-      var tb = document.querySelector('#sched tbody');
-      if (!tb.children.length){ alert('Primero ejecutá el cálculo.'); return; }
-      try{
-        var inp = readInputs();
-        var aporte = amortizationSchedule({
-          principal: inp.principal, startDate: inp.startDate,
-          ratePeriods: inp.ratePeriods, extraEvents: inp.extras, recurCfg: inp.recur,
-          penaltyPct: inp.penaltyPct, penaltyMonths: inp.penaltyMonths, originalTermMonths: inp.origTerm
-        });
-        var header = ["Periodo","FechaPago","TasaAnual(%)","Interes","Amortizacion","Cuota","Penalidad","AportesExtra","SaldoFinal"];
-        var lines = [header.join(",")];
-        for (var i=0;i<aporte.rows.length;i++){
-          var r = aporte.rows[i];
-          lines.push([r.Periodo,r.FechaPago,r.TasaAnualPeriodo.toFixed(4),r.Interes,r.Amortizacion,r.Cuota,r.Penalidad,r.AportesExtra,r.SaldoFinal].join(","));
-        }
-        var csv = lines.join("\n");
-        var blob = new Blob([csv],{type:"text/csv;charset=utf-8;"});
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a'); a.href=url; a.download='cronograma_aporte.csv';
-        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-      }catch(err){ alert(err.message||String(err)); }
-    });
-
-    // Primer cálculo/curva
-    try{ calculateAndRender(); }catch(e){ document.getElementById('msg').textContent = e.message || String(e); }
+    /* Initial calc */
+    try{ allowCalc=true; calculateAndRender(); }
+    catch(e){ document.getElementById('msg').textContent=e.message||String(e); }
   }
 
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', onReady);
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',onReady);
   } else {
     onReady();
   }
