@@ -726,6 +726,17 @@
     for(var i=0;i<rateRows.length;i++) html+=rateRowTemplate(rateRows[i],i);
     ratesBox.innerHTML=html;
   }
+  function readRatesRaw(){
+    var out=[], rows=ratesBox.querySelectorAll('.row4');
+    for(var i=0;i<rows.length;i++){
+      var row=rows[i];
+      var start=row.querySelector('.r-start').value;
+      var end=row.querySelector('.r-end').value;
+      var rate=parseFloat(row.querySelector('.r-rate').value)/100;
+      out.push({start:start||'', end:end||null, annual_rate:isFinite(rate)?rate:null});
+    }
+    return out;
+  }
   function readRates(){
     var out=[], rows=ratesBox.querySelectorAll('.row4');
     for(var i=0;i<rows.length;i++){
@@ -1052,7 +1063,7 @@
     ratesBox.addEventListener('click',function(e){
       var del=e.target&&e.target.getAttribute('data-del');
       if(del!==null&&del!==undefined){
-        try{ rateRows=readRates(); } catch(err){ alert(err.message||String(err)); return; }
+        rateRows=readRatesRaw(); /* read without validation so delete always works */
         var idx=Number(del); if(idx>0){ rateRows.splice(idx,1); renderRates(); }
       }
     });
