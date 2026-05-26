@@ -708,8 +708,9 @@
     var start=obj.start, end=obj.end, annual=obj.annual_rate;
     var rateStr=(typeof annual==='number'&&isFinite(annual))?(annual*100).toFixed(4):'';
     var delBtn=(i===0)?'<div></div>':'<div><label>&nbsp;</label><button class="btn btn-danger btn-xs" data-del="'+i+'">✕</button></div>';
+    var startAttrs=(i===0)?' readonly title="Igual a la fecha de inicio del préstamo"':'';
     return '<div class="row4" data-row="'+i+'">'+
-      '<div><label>Inicio</label><input type="date" class="r-start" value="'+start+'"></div>'+
+      '<div><label>Inicio</label><input type="date" class="r-start" value="'+start+'"'+startAttrs+'></div>'+
       '<div><label>Fin</label><input type="date" class="r-end" value="'+(end||'')+'"></div>'+
       '<div><label>Tasa anual (%)</label><input type="number" class="r-rate" step="0.0001" min="0" max="100" value="'+rateStr+'"></div>'+
       delBtn+'</div>';
@@ -1040,8 +1041,9 @@
     ensureDateInputs();
     ratesBox=document.getElementById('rates');
     extrasList=document.getElementById('extrasList');
-    /* Start with one empty rate row so user doesn't need to click "+ Periodo" first */
-    var todayStr=toISO(new Date());
+    /* Start with one empty rate row — start date locked to loan start date */
+    var startDateEl=document.getElementById('startDate');
+    var todayStr=startDateEl.value||toISO(new Date());
     rateRows=[{start:todayStr, end:null, annual_rate:null}];
     renderRates();
     renderExtras();
@@ -1067,7 +1069,13 @@
         var idx=Number(del); if(idx>0){ rateRows.splice(idx,1); renderRates(); }
       }
     });
-    document.getElementById('startDate').addEventListener('change',function(){ ensureDateInputs(); });
+    document.getElementById('startDate').addEventListener('change',function(){
+      ensureDateInputs();
+      /* Keep first rate row start date in sync with loan start date */
+      var firstStart=ratesBox.querySelector('.row4[data-row="0"] .r-start');
+      if(firstStart) firstStart.value=this.value;
+      if(rateRows.length>0) rateRows[0].start=this.value;
+    });
 
     /* Extras controls */
     document.getElementById('addExtra').addEventListener('click',function(){
